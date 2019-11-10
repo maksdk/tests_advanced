@@ -1,0 +1,12 @@
+{
+   "dependencies": {
+      "lodash": "*",
+      "faker": "*"
+   },
+   "scripts": {
+      "test": "jest --colors"
+   },
+   "jest": {
+      "testEnvironment": "node"
+   }
+}
