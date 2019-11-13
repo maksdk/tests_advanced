@@ -9,13 +9,23 @@ import getFunction from '../functions';
 const prettifyHTMLFile = getFunction();
 
 // BEGIN (write your solution here)
-const getFixPath = (name) => path.join(__dirname, "..", "__fixtures__", name);
-test("beautifull", async () => {
-   await prettifyHTMLFile(getFixPath("before.html"));
+const getFixuturePath = (name) => path.join(__dirname, '..', '__fixtures__', name);
 
-   const expected = await fs.readFile(getFixPath("after.html", "utf-8"));
-   const result = await fs.readFile(getFixPath("before.html", "utf-8"));
+let dest;
 
-   expect(expected.toString().trim()).toEqual(result.toString().trim());
+beforeEach(async () => {
+  const filename = 'before.html';
+  dest = path.join(os.tmpdir(), filename);
+  await fs.unlink(dest).catch(_.noop);
+  const src = getFixuturePath(filename);
+  await fs.copyFile(src, dest);
+
+});
+
+test('prettifyHTMLFile', async () => {
+  await prettifyHTMLFile(dest);
+  const actual = await fs.readFile(dest, 'utf-8');
+  const expected = await fs.readFile(getFixuturePath('after.html'), 'utf-8');
+  expect(actual).toBe(expected.trim());
 });
 // END
